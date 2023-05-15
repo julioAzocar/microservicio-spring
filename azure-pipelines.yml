@@ -10,17 +10,24 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: Gradle@2
+- task: SonarCloudPrepare@1
   inputs:
-    workingDirectory: ''
+    SonarCloud: 'sonarcloud'
+    organization: 'julioazocar-2'
+    projectKey: 'julioAzocar_microservicio-spring'
+    projectName: 'microservicio-spring'
+    scannerMode: 'Other'
+  displayName: 'SonarCloud prepare'
+- task: Gradle@3
+  inputs:
     gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
+    tasks: 'sonarqube'
+    publishJUnitResults: false
     javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    tasks: 'build'
+    sonarQubeRunAnalysis: true
+    sqGradlePluginVersionChoice: 'specify'
+    sonarQubeGradlePluginVersion: '3.3'
+    spotBugsAnalysis: false
 - script: |
         echo Hola Mundo
   displayName: 'Hola Mundo'
