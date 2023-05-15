@@ -16,7 +16,6 @@ steps:
     organization: 'julioazocar-2'
     projectKey: 'julioAzocar_microservicio-spring'
     projectName: 'microservicio-spring'
-    scannerMode: 'Other'
   displayName: 'SonarCloud prepare'
 - task: Gradle@3
   inputs:
