@@ -37,6 +37,21 @@ steps:
     #sqGradlePluginVersionChoice: 'specify'
     #sonarQubeGradlePluginVersion: '3.5.0.2730'
     #spotBugsAnalysis: false
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    command: 'login'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    repository: 'julinf/microservicio-spring'
+    command: 'build'
+    Dockerfile: '**/Dockerfile'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    repository: 'julinf/microservicio-spring'
+    command: 'push'
 - script: |
         echo Hola Mundo
   displayName: 'Hola Mundo'
