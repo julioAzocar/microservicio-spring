@@ -9,18 +9,17 @@ pool:
 
 steps:
 - task: SonarCloudPrepare@1
+  displayName: Preparing sonar cloud project 
   inputs:
-      SonarCloud: 'sonarcloud' # Nombre de la conexión a SonarCloud en Azure DevOps
-      organization: 'julioazocar-1'
-      scannerMode: 'CLI'
-      configMode: 'manual'
-      projectKey: 'project-microservicio-spring'
-      projectName: 'project-microservicio-spring'
-      cliSources: 'src'
-      extraProperties: |
-        sonar.java.source=1.8
-        # Otras propiedades adicionales de análisis de SonarQube, si es necesario
-
+         SonarCloud: 'sonarcloud'
+         organization: 'julioazocar-1'
+         scannerMode: 'Other'
+         extraProperties: |
+           # Additional properties that will be passed to the scanner,
+           # Put one key=value per line, example:
+           # sonar.exclusions=**/*.bin
+           sonar.projectKey=project-microservicio-spring
+           sonar.projectName=project-microservicio-spring
 
 - task: JavaToolInstaller@0
   inputs:
