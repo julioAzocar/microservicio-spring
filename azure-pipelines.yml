@@ -3,16 +3,28 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
-steps:
-- task: Maven@4
 
+steps:
+- task: Gradle@3
   inputs:
-    mavenPomFile: 'pom.xml'
+    gradleWrapperFile: 'gradlew'
+    tasks: 'build'
     publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    testResultsFiles: '**/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
-    mavenVersionOption: 'Default'
-    mavenAuthenticateFeed: false
-    effectivePomSkip: false
     sonarQubeRunAnalysis: true
-    sqMavenPluginVersionChoice: 'latest'
+    sqGradlePluginVersionChoice: 'specify'
+    sonarQubeGradlePluginVersion: '2.6.1'
+    checkStyleRunAnalysis: true
+    findBugsRunAnalysis: true
+    pmdRunAnalysis: true
+    spotBugsAnalysis: true
+    spotBugsGradlePluginVersionChoice: 'specify'
+    spotbugsGradlePluginVersion: '4.7.0'
+    
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'sonarcloud'
+    organization: 'julioazocar-2'
+    scannerMode: 'Other'
+    cliProjectKey: 'project-microservicio-spring'
