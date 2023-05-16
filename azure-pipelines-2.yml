@@ -27,8 +27,13 @@ steps:
 # Build your Java project and run tests with Apache Maven.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
-- task: SonarCloudAnalyze@1
+
 
 - task: SonarCloudPublish@1
   inputs:
     pollingTimeoutSec: '300'
+    
+- task: SonarCloudAnalyze@1
+
+
+
