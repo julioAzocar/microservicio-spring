@@ -32,7 +32,8 @@ steps:
   inputs:
       pollingTimeoutSec: '300'
 
-#- task: SonarCloudQualityGate@1  String does not match the pattern of "^PowerShell@2$".
+- task: SonarCloudQualityGate@1
+  displayName: Check SonarCloud quality gate
 
 - task: Docker@2
   inputs:
