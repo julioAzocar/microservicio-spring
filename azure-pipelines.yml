@@ -49,10 +49,38 @@ steps:
     sqGradlePluginVersionChoice: 'specify'
     sonarQubeGradlePluginVersion: '3.5.0.2730'
     spotBugsAnalysis: false
-- script: |
-    echo 'Ruta del archivo JAR:'
-    echo '$(System.DefaultWorkingDirectory)/build/libs/microservicio-spring-1.0.0.jar'
-  displayName: 'Imprimir Ruta del Archivo JAR'
+
+- task: Maven@3
+  inputs:
+         mavenPomFile: 'pom.xml'
+         mavenOptions: '-Xmx3072m'
+         javaHomeOption: 'JDKVersion'
+         jdkVersionOption: '1.11'
+         jdkArchitectureOption: 'x64'
+         publishJUnitResults: true
+         testResultsFiles: '**/surefire-reports/TEST-*.xml'
+         mavenAuthenticateFeed: true
+         goals: 'package'
+         options: '-X -P azure_artifacts $(MAVEN_OPTS)' 
+         sonarQubeRunAnalysis: true 
+         sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom         
+    
+- task: SonarCloudPublish@1
+  displayName: publish analisys
+  inputs:
+      pollingTimeoutSec: '300'
+- task: CopyFiles@1
+  displayName: 'Coppy jar to pipeline artifact'
+  inputs:
+         SourceFolder: '$(System.DefaultWorkingDirectory)/target/'
+         Contents: '*.jar'
+         TargetFolder: '$(build.artifactstagingdirectory)/$(buildConfiguration)'
+         CleanTargetFolder: true
+
+#- script: |
+ #   echo 'Ruta del archivo JAR:'
+  #  echo '$(System.DefaultWorkingDirectory)/build/libs/microservicio-spring-1.0.0.jar'
+  #displayName: 'Imprimir Ruta del Archivo JAR'
 - task: Docker@2
   inputs:
     containerRegistry: 'Docker'
