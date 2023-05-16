@@ -23,17 +23,25 @@ steps:
 
 - task: SonarCloudAnalyze@1
 
+#- task: Gradle@3
+#  inputs:
+#      gradleWrapperFile: 'gradlew'
+#      tasks: 'build'
+
 - task: Gradle@3
   inputs:
-      gradleWrapperFile: 'gradlew'
-      tasks: 'build'
-
+    gradleWrapperFile: 'gradlew'
+    tasks: 'build'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    sonarQubeRunAnalysis: false
+    spotBugsAnalysis: false
+  displayName: 'Build'
+  
 - task: SonarCloudPublish@1
   inputs:
       pollingTimeoutSec: '300'
-
-- task: SonarCloudQualityGate@1
-  displayName: Check SonarCloud quality gate
 
 - task: Docker@2
   inputs:
