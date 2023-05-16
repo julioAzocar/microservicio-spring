@@ -23,9 +23,9 @@ steps:
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'sonarcloud'
-    organization: 'julioazocar-2'
-    projectKey: 'julioAzocar_microservicio-spring'
-    projectName: 'microservicio-spring'
+    organization: 'julioazocar-1'
+    projectKey: 'project-microservicio-spring'
+    projectName: 'project-microservicio-spring'
   displayName: 'SonarCloud prepare'
 - task: Gradle@3
   inputs:
