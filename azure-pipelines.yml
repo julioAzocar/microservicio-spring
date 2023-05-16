@@ -1,64 +1,52 @@
-# Gradle
-# Build your Java project and run tests with Gradle using a Gradle wrapper script.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
-- task: Gradle@3
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'build'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: false
-    spotBugsAnalysis: false
-  displayName: 'Build'
-#- task: SonarCloudPrepare@1
-#  inputs:
-#    SonarCloud: 'sonarcloud'
-#    organization: 'julioazocar-1'
-#    projectKey: 'project-microservicio-spring'
-#    projectName: 'project-microservicio-spring'
-#  displayName: 'SonarCloud prepare'
-- task: SonarCloudPrepare@1
-  displayName: Preparing sonar cloud project 
-  inputs:
-         SonarCloud: 'sonarcloud'
-         organization: 'julioazocar-1'
-         scannerMode: 'Other'
-         extraProperties: |
-           # Additional properties that will be passed to the scanner,
-           # Put one key=value per line, example:
-           # sonar.exclusions=**/*.bin
-           sonar.projectKey=project-microservicio-spring
-           sonar.projectName=project-microservicio-spring
-#- task: Gradle@3
-#  inputs:
-#    gradleWrapperFile: 'gradlew'
-#    tasks: 'sonar'
-#    publishJUnitResults: false
-#    javaHomeOption: 'JDKVersion'
-#    sonarQubeRunAnalysis: true
-#    sqGradlePluginVersionChoice: 'specify'
-#    sonarQubeGradlePluginVersion: '3.5.0.2730'
-#    spotBugsAnalysis: false
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'sonarcloud' # Nombre de la conexión a SonarCloud en Azure DevOps
+      organization: 'julioazocar-1'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      projectKey: 'project-microservicio-spring'
+      projectName: 'project-microservicio-spring'
+      cliSources: 'src'
+      extraProperties: |
+        sonar.java.source=1.8
+        # Otras propiedades adicionales de análisis de SonarQube, si es necesario
 
-- task: SonarCloudPublish@1
-  displayName: publish analisys
-  inputs:
+
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '8'
+      jdkArchitectureOption: 'x64'
+
+  - task: SonarCloudAnalyze@1
+
+  - task: Gradle@3
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      tasks: 'build'
+
+  - task: SonarCloudPublish@1
+    inputs:
       pollingTimeoutSec: '300'
 
-#- script: |
- #   echo 'Ruta del archivo JAR:'
-  #  echo '$(System.DefaultWorkingDirectory)/build/libs/microservicio-spring-1.0.0.jar'
-  #displayName: 'Imprimir Ruta del Archivo JAR'
+  - task: SonarCloudQualityGate@1  String does not match the pattern of "^PowerShell@2$".
+
+
+
+
+
+
+
+
 - task: Docker@2
   inputs:
     containerRegistry: 'Docker'
