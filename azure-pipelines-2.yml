@@ -17,23 +17,15 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
 
-# Maven
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'sonarcloud'
-    organization: 'julioazocar-1'
-    projectKey: 'project-microservicio-spring'
-    scannerMode: 'Other'
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
-
-- task: SonarCloudPublish@1
-  inputs:
-    pollingTimeoutSec: '300'
-    
-- task: SonarCloudAnalyze@1
+    organization: 'julioazocar-2'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'project-microservicio-spring'
+    cliProjectName: 'project-microservicio-spring'
+    cliSources: '.'
 
 
 
