@@ -20,13 +20,25 @@ steps:
     sonarQubeRunAnalysis: false
     spotBugsAnalysis: false
   displayName: 'Build'
+#- task: SonarCloudPrepare@1
+#  inputs:
+#    SonarCloud: 'sonarcloud'
+#    organization: 'julioazocar-1'
+#    projectKey: 'project-microservicio-spring'
+#    projectName: 'project-microservicio-spring'
+#  displayName: 'SonarCloud prepare'
 - task: SonarCloudPrepare@1
+  displayName: Preparing sonar cloud project 
   inputs:
-    SonarCloud: 'sonarcloud'
-    organization: 'julioazocar-1'
-    projectKey: 'project-microservicio-spring'
-    projectName: 'project-microservicio-spring'
-  displayName: 'SonarCloud prepare'
+         SonarCloud: 'sonarcloud'
+         organization: 'julioazocar-1'
+         scannerMode: 'Other'
+         extraProperties: |
+           # Additional properties that will be passed to the scanner,
+           # Put one key=value per line, example:
+           # sonar.exclusions=**/*.bin
+           sonar.projectKey=project-microservicio-spring
+           sonar.projectName=project-microservicio-spring
 - task: Gradle@3
   inputs:
     gradleWrapperFile: 'gradlew'
