@@ -21,11 +21,6 @@ steps:
            sonar.projectKey=project-microservicio-spring
            sonar.projectName=project-microservicio-spring
 
-- task: JavaToolInstaller@0
-  inputs:
-      versionSpec: '8'
-      jdkArchitectureOption: 'x64'
-
 - task: SonarCloudAnalyze@1
 
 - task: Gradle@3
