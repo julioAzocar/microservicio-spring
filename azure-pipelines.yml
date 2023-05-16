@@ -23,21 +23,21 @@ steps:
 
 - task: SonarCloudAnalyze@1
 
-#- task: Gradle@3
-#  inputs:
-#      gradleWrapperFile: 'gradlew'
-#      tasks: 'build'
-
 - task: Gradle@3
   inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'build'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: true
-    spotBugsAnalysis: false
-  displayName: 'Build'
+      gradleWrapperFile: 'gradlew'
+      tasks: 'build'
+      sonarQubeRunAnalysis: true
+#- task: Gradle@3
+#  inputs:
+#    gradleWrapperFile: 'gradlew'
+#    tasks: 'build'
+#    publishJUnitResults: true
+#    testResultsFiles: '**/TEST-*.xml'
+#    javaHomeOption: 'JDKVersion'
+#    sonarQubeRunAnalysis: true
+#    spotBugsAnalysis: false
+#  displayName: 'Build'
   
 - task: SonarCloudPublish@1
   inputs:
