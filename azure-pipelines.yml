@@ -8,8 +8,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  - task: SonarCloudPrepare@1
-    inputs:
+- task: SonarCloudPrepare@1
+  inputs:
       SonarCloud: 'sonarcloud' # Nombre de la conexión a SonarCloud en Azure DevOps
       organization: 'julioazocar-1'
       scannerMode: 'CLI'
@@ -22,30 +22,23 @@ steps:
         # Otras propiedades adicionales de análisis de SonarQube, si es necesario
 
 
-  - task: JavaToolInstaller@0
-    inputs:
+- task: JavaToolInstaller@0
+  inputs:
       versionSpec: '8'
       jdkArchitectureOption: 'x64'
 
-  - task: SonarCloudAnalyze@1
+- task: SonarCloudAnalyze@1
 
-  - task: Gradle@3
-    inputs:
+- task: Gradle@3
+  inputs:
       gradleWrapperFile: 'gradlew'
       tasks: 'build'
 
-  - task: SonarCloudPublish@1
-    inputs:
+- task: SonarCloudPublish@1
+  inputs:
       pollingTimeoutSec: '300'
 
-  - task: SonarCloudQualityGate@1  String does not match the pattern of "^PowerShell@2$".
-
-
-
-
-
-
-
+#- task: SonarCloudQualityGate@1  String does not match the pattern of "^PowerShell@2$".
 
 - task: Docker@2
   inputs:
