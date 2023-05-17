@@ -34,16 +34,13 @@ stages:
           sonar.projectKey=project-microservicio-spring
           sonar.projectName=project-microservicio-spring
 
-    - task: Gradle@3
+    - task: Gradle@2
       inputs:
         gradleWrapperFile: 'gradlew'
-        tasks: 'sonar'
-        publishJUnitResults: false
-        javaHomeOption: 'JDKVersion'
-        sonarQubeRunAnalysis: true
-        sqGradlePluginVersionChoice: 'specify'
-        sonarQubeGradlePluginVersion: '3.5.0.2730'
-        spotBugsAnalysis: false
+        gradleOptions: '-Xmx3072m'
+        publishJUnitResults: true
+        testResultsFiles: '**/test-results/**/*.xml'
+        tasks: 'build'
 
   #  - task: Maven@3
    #   inputs:
