@@ -48,3 +48,7 @@ stages:
         options: '-X -P azure_artifacts $(MAVEN_OPTS)' 
         sonarQubeRunAnalysis: true 
         sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom 
+    - task: SonarCloudPublish@1
+      displayName: publish analisys
+      inputs:
+         pollingTimeoutSec: '300'
