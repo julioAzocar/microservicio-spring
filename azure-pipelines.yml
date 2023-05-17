@@ -1,30 +1,54 @@
 trigger:
-- main
+  branches:
+    include:
+      - feature-ms-julioAzocar-mensaje
+
+variables:
+  SONAR_TOKEN: 'bf3e593e2060d15d042dc60ec95338143794bc3b'
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
-- task: Gradle@3
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'sonarqube'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: true
-    sqGradlePluginVersionChoice: 'specify'
-    sonarQubeGradlePluginVersion: '2.6.1'
-    checkStyleRunAnalysis: true
-    findBugsRunAnalysis: true
-    pmdRunAnalysis: true
-    spotBugsAnalysis: true
-    spotBugsGradlePluginVersionChoice: 'specify'
-    spotbugsGradlePluginVersion: '4.7.0'
-    
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'sonarcloud'
-    organization: 'julioazocar-2'
+    organization: 'julioazocar-1'
     scannerMode: 'Other'
-    cliProjectKey: 'project-microservicio-spring'
+    projectKey: 'project-microservicio-spring'
+    projectName: 'project-microservicio-spring'
+    extraProperties: |
+      sonar.login=$(SONAR_TOKEN)
+      sonar.coverage.exclusions=**/test/** # Opcional: Exclusiones de cobertura de pruebas
+
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: true
+    testResultsFiles: '**/test-results/**/*.xml'
+    tasks: 'build'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'SonarCloud Analysis'
+
+- task: SonarCloudPublish@1
+  displayName: 'SonarCloud Publish'
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    command: 'login'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    repository: 'julinf/microservicio-spring'
+    command: 'build'
+    Dockerfile: '**/Dockerfile'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    repository: 'julinf/microservicio-spring'
+    command: 'push'
