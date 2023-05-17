@@ -4,34 +4,47 @@ trigger:
 variables:
   buildConfiguration: 'Release'
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
-  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'  
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
-pool:
-  vmImage: ubuntu-latest
+stages:
+- stage: 'build'
+  displayName: 'Build the application' 
+  jobs:
+  - job: 'build'
+    pool:
+      vmImage: ubuntu-latest
+       
+    steps: 
+    - task: Cache@2
+      inputs:      
+        key: 'maven | "$(Agent.OS)" | **/pom.xml'
+        restoreKeys: |
+          maven | "$(Agent.OS)"
+          maven
+        path: $(MAVEN_CACHE_FOLDER)
+      displayName: 'Cache Maven local repo' 
 
-steps: 
+    - task: SonarCloudPrepare@1
+      displayName: 'Preparing SonarCloud project' 
+      inputs:
+        SonarCloud: 'sonarcloud'
+        organization: 'julioazocar-1'
+        scannerMode: 'Other'
+        extraProperties: |
+          sonar.projectKey=project-microservicio-spring
+          sonar.projectName=project-microservicio-spring
 
-- task: SonarCloudPrepare@1
-  displayName: Preparing sonar cloud project 
-  inputs:
-    SonarCloud: 'sonarcloud'
-    organization: 'julioazocar-1'
-    scannerMode: 'Other'
-    extraProperties: |
-     sonar.projectKey=project-microservicio-spring
-     sonar.projectName=project-microservicio-spring
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    mavenAuthenticateFeed: true
-    goals: 'package'
-    options: '-X -P azure_artifacts $(MAVEN_OPTS)' 
-    sonarQubeRunAnalysis: true 
-    sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom         
-    
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        mavenAuthenticateFeed: true
+        goals: 'package'
+        options: '-X -P azure_artifacts $(MAVEN_OPTS)' 
+        sonarQubeRunAnalysis: true 
+        sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom 
