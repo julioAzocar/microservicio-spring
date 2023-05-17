@@ -2,7 +2,7 @@
 trigger:
   branches:
     include:
-      - feature-ms-julioazocar-mensaje2
+      - main
 variables:
   SONAR_TOKEN: 'bf3e593e2060d15d042dc60ec95338143794bc3b'
 
