@@ -28,3 +28,6 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/test-results/**/*.xml'
     tasks: 'build'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'SonarCloud Analysis'
