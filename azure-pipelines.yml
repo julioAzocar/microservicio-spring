@@ -1,6 +1,11 @@
 trigger:
 - main
 
+variables:
+  buildConfiguration: 'Release'
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'  
+
 pool:
   vmImage: ubuntu-latest
 
