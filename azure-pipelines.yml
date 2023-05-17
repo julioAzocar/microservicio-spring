@@ -1,54 +1,30 @@
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 variables:
-  buildConfiguration: 'Release'
-  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
-  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+  SONAR_TOKEN: 'bf3e593e2060d15d042dc60ec95338143794bc3b'
 
-stages:
-- stage: 'build'
-  displayName: 'Build the application' 
-  jobs:
-  - job: 'build'
-    pool:
-      vmImage: ubuntu-latest
-       
-    steps: 
-    - task: Cache@2
-      inputs:      
-        key: 'maven | "$(Agent.OS)" | **/pom.xml'
-        restoreKeys: |
-          maven | "$(Agent.OS)"
-          maven
-        path: $(MAVEN_CACHE_FOLDER)
-      displayName: 'Cache Maven local repo' 
+pool:
+  vmImage: 'ubuntu-latest'
 
-    - task: SonarCloudPrepare@1
-      displayName: 'Preparing SonarCloud project' 
-      inputs:
-        SonarCloud: 'sonarcloud'
-        organization: 'julioazocar-1'
-        scannerMode: 'Other'
-        extraProperties: |
-          sonar.projectKey=project-microservicio-spring
-          sonar.projectName=project-microservicio-spring
+steps:
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'sonarcloud'
+    organization: 'julioazocar-1'
+    scannerMode: 'Other'
+    projectKey: 'project-microservicio-spring'
+    projectName: 'project-microservicio-spring'
+    extraProperties: |
+      sonar.login=$(SONAR_TOKEN)
+      sonar.coverage.exclusions=**/test/** # Opcional: Exclusiones de cobertura de pruebas
 
-    - task: Maven@3
-      inputs:
-        mavenPomFile: 'pom.xml'
-        mavenOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        mavenAuthenticateFeed: true
-        goals: 'package'
-        options: '-X -P azure_artifacts $(MAVEN_OPTS)' 
-        sonarQubeRunAnalysis: true 
-        sqMavenPluginVersionChoice: 'latest' # Required when sonarQubeRunAnalysis == True# Options: latest, pom 
-    - task: SonarCloudPublish@1
-      displayName: publish analisys
-      inputs:
-         pollingTimeoutSec: '300'
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: true
+    testResultsFiles: '**/test-results/**/*.xml'
+    tasks: 'build'
