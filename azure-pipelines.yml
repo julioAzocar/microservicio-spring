@@ -24,15 +24,27 @@ stages:
         path: $(MAVEN_CACHE_FOLDER)
       displayName: 'Cache Maven local repo' 
 
+#    - task: SonarCloudPrepare@1
+#      displayName: 'Preparing SonarCloud project' 
+#      inputs:
+#        SonarCloud: 'sonarcloud'
+#        organization: 'julioazocar-1'
+#        scannerMode: 'Gradle'
+#        extraProperties: |
+#          sonar.projectKey=project-microservicio-spring
+#          sonar.projectName=project-microservicio-spring
+
     - task: SonarCloudPrepare@1
-      displayName: 'Preparing SonarCloud project' 
       inputs:
         SonarCloud: 'sonarcloud'
         organization: 'julioazocar-1'
-        scannerMode: 'Gradle'
+        scannerMode: 'Other'
+        projectKey: 'project-microservicio-spring'
+        projectName: 'project-microservicio-spring'
         extraProperties: |
-          sonar.projectKey=project-microservicio-spring
-          sonar.projectName=project-microservicio-spring
+          sonar.host.url=https://sonarcloud.io
+          sonar.login=18127ef228be6dd5de68f6ded78344b96906cd21
+
 
     - task: Gradle@2
       inputs:
