@@ -29,8 +29,6 @@ steps:
     testResultsFiles: '**/test-results/**/*.xml'
     tasks: 'build'
     sonarQubeRunAnalysis: true
-    sqGradlePluginVersionChoice: 'specify'
-    sqGradlePluginVersion: '3.5.0.2730'
 - task: SonarCloudAnalyze@1
   displayName: 'SonarCloud Analysis'
 
