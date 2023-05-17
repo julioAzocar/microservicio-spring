@@ -31,3 +31,8 @@ steps:
 
 - task: SonarCloudAnalyze@1
   displayName: 'SonarCloud Analysis'
+
+- task: SonarCloudPublish@1
+  displayName: 'SonarCloud Publish'
+  inputs:
+    pollingTimeoutSec: '300'
