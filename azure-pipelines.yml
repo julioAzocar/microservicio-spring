@@ -27,8 +27,8 @@ steps:
     gradleOptions: '-Xmx3072m'
     publishJUnitResults: true
     testResultsFiles: '**/test-results/**/*.xml'
-    tasks: 'build sonarqube'
-    #sonarQubeRunAnalysis: true
+    tasks: 'build'
+
 - task: SonarCloudAnalyze@1
   displayName: 'SonarCloud Analysis'
 
