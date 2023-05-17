@@ -27,15 +27,15 @@ steps:
     gradleOptions: '-Xmx3072m'
     publishJUnitResults: true
     testResultsFiles: '**/test-results/**/*.xml'
-    tasks: 'build'
-    sonarQubeRunAnalysis: true
+    tasks: 'build sonarqube'
+    #sonarQubeRunAnalysis: true
 - task: SonarCloudAnalyze@1
   displayName: 'SonarCloud Analysis'
 
-#- task: SonarCloudPublish@1
-#  displayName: 'SonarCloud Publish'
-#  inputs:
-#    pollingTimeoutSec: '300'
+- task: SonarCloudPublish@1
+  displayName: 'SonarCloud Publish'
+  inputs:
+    pollingTimeoutSec: '300'
 
 - task: Docker@2
   inputs:
