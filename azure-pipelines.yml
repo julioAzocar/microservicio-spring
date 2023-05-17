@@ -39,4 +39,18 @@ steps:
 #  inputs:
 #    pollingTimeoutSec: '300'
 
-
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    command: 'login'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    repository: 'julinf/microservicio-spring'
+    command: 'build'
+    Dockerfile: '**/Dockerfile'
+- task: Docker@2
+  inputs:
+    containerRegistry: 'Docker'
+    repository: 'julinf/microservicio-spring'
+    command: 'push'
