@@ -29,7 +29,7 @@ stages:
       inputs:
         SonarCloud: 'sonarcloud'
         organization: 'julioazocar-1'
-        scannerMode: 'Other'
+        scannerMode: 'Gradle'
         extraProperties: |
           sonar.projectKey=project-microservicio-spring
           sonar.projectName=project-microservicio-spring
