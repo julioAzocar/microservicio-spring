@@ -1,67 +1,41 @@
+
 trigger:
-- main
+  branches:
+    include:
+      - main
+
+variables:
+  SONAR_TOKEN: 'bf3e593e2060d15d042dc60ec95338143794bc3b'
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
-- script: |
-      git fetch --unshallow
-  displayName: 'convert to non-shallow clone' 
-
-- task: Gradle@3
-  inputs:
-      gradleWrapperFile: 'gradlew'
-      tasks: 'build'
-      publishJUnitResults: true
-      javaHomeOption: 'JDKVersion'
-      sonarQubeRunAnalysis: false
-      spotBugsAnalysis: false
-  displayName: Build
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'sonarcloud'
     organization: 'julioazocar-1'
-    projectKey: 'julioazocar-1_project-microservicio-spring'
+    scannerMode: 'Other'
+    projectKey: 'project-microservicio-spring'
     projectName: 'project-microservicio-spring'
-  displayName: 'SonarCloud Prepare'
-  
-- task: Gradle@3
-  displayName: 'Run test'
+    extraProperties: |
+      sonar.login=$(SONAR_TOKEN)
+      sonar.coverage.exclusions=**/test/** # Opcional: Exclusiones de cobertura de pruebas
+
+- task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
-    workingDirectory: '$(Build.SourcesDirectory)'
-    tasks: 'clean test jacocoTestReport'
+    gradleOptions: '-Xmx3072m'
     publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: false
-    spotBugsAnalysis: false
+    testResultsFiles: '**/test-results/**/*.xml'
+    tasks: 'build'
 
-- task: Gradle@3
+- task: SonarCloudAnalyze@1
+  displayName: 'SonarCloud Analysis'
+
+- task: SonarCloudPublish@1
+  displayName: 'SonarCloud Publish'
   inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'sonar'
-    publishJUnitResults: false
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: true
-    sqGradlePluginVersionChoice: 'specify'
-    sonarQubeGradlePluginVersion: '3.3'
-    spotBugsAnalysis: false
+    pollingTimeoutSec: '300'
 
 
-#- task: Docker@2
-#  inputs:
-#    containerRegistry: 'Docker'
-#    command: 'login'
-#- task: Docker@2
-#  inputs:
-#    containerRegistry: 'Docker'
-#    repository: 'julinf/microservicio-spring'
-#    command: 'build'
-#    Dockerfile: '**/Dockerfile'
-#- task: Docker@2
-#  inputs:
-#    containerRegistry: 'Docker'
-#    repository: 'julinf/microservicio-spring'
-#    command: 'push'
